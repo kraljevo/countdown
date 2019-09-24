@@ -1,10 +1,11 @@
 #remaining {
+    align-content: center;
     display: flex;
     flex-direction: row;
     margin: 0 auto;
-    width: 50%;
+    width: 70%;
 }
 
 h3 {
-    margin: 20px;
+    margin: 0 auto;
 }

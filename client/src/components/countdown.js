@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import './customers.css';
+import './countdown.css';
 
 class Customers extends Component {
   constructor() {
     super();
     this.state = {
       eventDate: undefined,
-      eventTime: undefined
+      eventTime: undefined,
+      years: undefined,
+      months: undefined,
+      days: undefined,
+      hours: undefined,
+      minutes: undefined,
+      seconds: undefined
     };
   }
   
@@ -14,9 +20,11 @@ class Customers extends Component {
     event.preventDefault();
     console.log('Handling submit...');
     let userInput = {
-        eventDate: event.target.eventdate.value,
+        eventDate: new Date(event.target.eventdate.value),
         eventTime: event.target.eventtime.value
     };
+
+    console.log(userInput);
     
     fetch('/api/eventData', {
       method: 'POST',
@@ -28,12 +36,17 @@ class Customers extends Component {
     .then(response => console.log('Success: ', response))
     .catch(error => console.error('Error: ', error))
 
+    this.timeRemaining(userInput.eventDate, userInput.eventTime);
+
     this.setState({
       eventDate: event.target.eventdate.value,
       eventTime: event.target.eventtime.value
     });
+  }
 
-    document.getElementById("event-form").reset();
+  timeRemaining = (date, time) => {
+    let years = date.getFullYear();
+    console.log(years);
   }
 
   componentDidMount() {
@@ -56,7 +69,7 @@ class Customers extends Component {
               <input type="time" name="eventtime"/>
             </div>
             <div>
-              <input type="submit" value="Save Changes" />
+              <input type="submit" value="Set Event" />
             </div>
           </form>
           <div>

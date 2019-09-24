@@ -2,13 +2,19 @@ const express = require('express');
 
 const app = express();
 
-app.get('/api/eventData', (req, res) => {
-  const eventData = [
-    {id: 1, eventDate: undefined, eventTime: undefined}
-  ];
+const userInput = [
+  {eventDate: undefined, eventTime: undefined}
+];
 
-  res.json(eventData);
+app.post('/api/eventData', (res) => {
+  console.log(userInput)
+  res.send(userInput);
 });
+
+app.get('/api/eventData', (req, res) => {
+  console.log(userInput)
+  res.send(userInput);
+})
 
 const port = 5000;
 

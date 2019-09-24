@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './assets/images/shorthand.png';
 import './App.css';
-import Customers from './components/customers';
+import Customers from './components/countdown';
 
 class App extends Component {
   render() {
