@@ -1,52 +1,52 @@
 import React, { Component } from 'react';
 import './countdown.css';
 
-class Customers extends Component {
+class Countdown extends Component {
   constructor() {
     super();
     this.state = {
-      eventDate: undefined,
-      eventTime: undefined,
-      years: undefined,
-      months: undefined,
-      days: undefined,
-      hours: undefined,
-      minutes: undefined,
-      seconds: undefined
+      eventDate: new Date(),
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0
     };
   }
   
   handleSubmit = event => {
     event.preventDefault();
     console.log('Handling submit...');
-    let userInput = {
-        eventDate: new Date(event.target.eventdate.value),
-        eventTime: event.target.eventtime.value
-    };
+    let dateThen = new Date(event.target.eventdate.value);
+    let dateNow = new Date();
 
-    console.log(userInput);
-    
-    fetch('/api/eventData', {
-      method: 'POST',
-      body: JSON.stringify(userInput),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
-    .then(response => console.log('Success: ', response))
-    .catch(error => console.error('Error: ', error))
+    if(dateThen < dateNow){
+      alert('Please choose an event in the future.')
+    } else {
+      fetch('/api/eventData', {
+        method: 'POST',
+        body: JSON.stringify(dateThen),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json(dateThen))
+      .catch(error => console.error('Error: ', error))
 
-    this.timeRemaining(userInput.eventDate, userInput.eventTime);
+      let distance = dateThen - dateNow;
 
-    this.setState({
-      eventDate: event.target.eventdate.value,
-      eventTime: event.target.eventtime.value
-    });
-  }
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  timeRemaining = (date, time) => {
-    let years = date.getFullYear();
-    console.log(years);
+      this.setState({
+        eventDate: dateThen,
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds
+      });
+    }
   }
 
   componentDidMount() {
@@ -61,26 +61,16 @@ class Customers extends Component {
         <h2>Event Information</h2>
           <form id="event-form" onSubmit={this.handleSubmit}>
             <div>
-              <div>Event Date:</div>
-              <input type="date" name="eventdate" />
+              <input type="datetime-local" name="eventdate" />
             </div>
             <div>
-              <div>Event Time:</div>
-              <input type="time" name="eventtime"/>
-            </div>
-            <div>
-              <input type="submit" value="Set Event" />
+              <input type="submit" value="Set Event" class="button" />
             </div>
           </form>
-          <div>
+          <div class="timer">
             <h2>Time Remaining</h2>
             <div id="remaining">
-              <h3>Years,</h3>
-              <h3>Months,</h3>
-              <h3>Days,</h3>
-              <h3>Hours,</h3>
-              <h3>Minutes,</h3>
-              <h3>Seconds.</h3>
+              <h3>{this.state.days} Days, {this.state.hours} Hours, {this.state.minutes} Minutes, and {this.state.seconds} Seconds.</h3>
             </div>
           </div>
       </div>
@@ -88,4 +78,4 @@ class Customers extends Component {
   }
 }
 
-export default Customers;
+export default Countdown;
