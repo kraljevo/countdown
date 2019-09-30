@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './assets/images/shorthand.png';
 import './App.css';
-import Customers from './components/countdown';
+import Countdown from './components/countdown.js';
 
 class App extends Component {
   render() {
@@ -11,7 +11,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Countdown Timer</h1>
         </header>
-        <Customers />
+        <Countdown />
       </div>
     );
   }

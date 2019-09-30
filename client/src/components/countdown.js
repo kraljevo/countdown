@@ -6,6 +6,7 @@ class Countdown extends Component {
     super();
     this.state = {
       eventDate: new Date(),
+      years: 0,
       days: 0,
       hours: 0,
       minutes: 0,
@@ -22,25 +23,29 @@ class Countdown extends Component {
     if(dateThen < dateNow){
       alert('Please choose an event in the future.')
     } else {
-      fetch('/api/eventData', {
-        method: 'POST',
-        body: JSON.stringify(dateThen),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(res => res.json(dateThen))
-      .catch(error => console.error('Error: ', error))
-
       let distance = dateThen - dateNow;
 
-      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      let years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365))
+      let days = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
       let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+      fetch('/api/eventData', {
+        method: 'POST',
+        body: JSON.stringify({
+          eventDate: dateThen
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => console.log(res))
+      .catch(error => console.error('Error: ', error))
+
       this.setState({
         eventDate: dateThen,
+        years: years,
         days: days,
         hours: hours,
         minutes: minutes,
@@ -64,13 +69,13 @@ class Countdown extends Component {
               <input type="datetime-local" name="eventdate" />
             </div>
             <div>
-              <input type="submit" value="Set Event" class="button" />
+              <input type="submit" value="Set Event" className="button" />
             </div>
           </form>
-          <div class="timer">
+          <div className="timer">
             <h2>Time Remaining</h2>
             <div id="remaining">
-              <h3>{this.state.days} Days, {this.state.hours} Hours, {this.state.minutes} Minutes, and {this.state.seconds} Seconds.</h3>
+              <h3>{this.state.years} years, {this.state.days} days, {this.state.hours} hours, {this.state.minutes} minutes, and {this.state.seconds} seconds.</h3>
             </div>
           </div>
       </div>

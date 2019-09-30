@@ -1,13 +1,12 @@
 const express = require('express');
-
 const app = express();
+const port = 5000;
+
+app.listen(port, () => `Server running on port ${port}`);
+app.use(express.json());
 
 let userInput = {
-  eventDate: new Date(),
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0
+  eventDate: new Date()
 };
 
 app.get('/api/eventData', (req, res) => {
@@ -16,11 +15,7 @@ app.get('/api/eventData', (req, res) => {
 
 app.post('/api/eventData', (req, res) => {
   console.log('POST request received.');
-  console.log(userInput);
-  res.json(userInput = req.body);
-  console.log(userInput);
+  userInput = req.body;
+  res.json({statusText: 'SUCCESS'});
+  console.log(`Response sent: ${userInput.eventDate}`);
 });
-
-const port = 5000;
-
-app.listen(port, () => `Server running on port ${port}`);
