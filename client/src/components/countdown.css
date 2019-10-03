@@ -62,7 +62,7 @@ input {
 	background-color:#68a54b;
 }
 
-.timer {
+#open {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #74ad5a), color-stop(1, #68a54b));
 	background:-moz-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
 	background:-webkit-linear-gradient(top, #74ad5a 5%, #68a54b 100%);
@@ -75,4 +75,8 @@ input {
     color: #ffffff;
     margin: 0 auto;
     width: 80%;
+}
+
+#closed {
+	display: none;
 }

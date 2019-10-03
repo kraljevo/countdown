@@ -5,8 +5,8 @@ class Countdown extends Component {
   constructor() {
     super();
     this.state = {
-      eventDate: new Date(),
-      currentDate: new Date(),
+      timer: "closed",
+      eventDate: undefined,
       years: 0,
       days: 0,
       hours: 0,
@@ -24,7 +24,8 @@ class Countdown extends Component {
     if(dateThen < dateNow){
       alert('Please choose an event in the future.')
     } else {
-      this.timeCalc(dateThen, dateNow);
+      this.setState({eventDate: dateThen});
+      this.timeCalc();
 
       fetch('/api/eventData', {
         method: 'POST',
@@ -40,27 +41,32 @@ class Countdown extends Component {
     }
   }
 
-  timeCalc = (event, current) => {
-    let distance = event - current;
-
-    let years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365))
-    let days = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
-    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    this.setState({
-      eventDate: event,
-      currentDate: current,
-      years: years,
-      days: days,
-      hours: hours,
-      minutes: minutes,
-      seconds: seconds
-    });
+  timeCalc = () => {
+    if(this.state.eventDate){
+      let dateThen = this.state.eventDate;
+      let dateNow = new Date();
+      let distance = dateThen - dateNow;
+  
+      let years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365))
+      let days = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  
+      if(seconds !== -1){
+        this.setState({
+        timer: "open",
+        years: years,
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds
+      })};
+    }
   }
 
   componentDidMount() {
+    setInterval(this.timeCalc, 1000);
     fetch('/api/eventData')
       .then(res => res.json())
       .then(eventData => this.setState({eventData}, () => console.log('Event data fetched...', eventData)));
@@ -78,7 +84,7 @@ class Countdown extends Component {
               <input type="submit" value="Set Event" className="button" />
             </div>
           </form>
-          <div className="timer">
+          <div id={this.state.timer}>
             <h2>Time Remaining</h2>
             <div id="remaining">
               <h3>{this.state.years} years, {this.state.days} days, {this.state.hours} hours, {this.state.minutes} minutes, and {this.state.seconds} seconds.</h3>
