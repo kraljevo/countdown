@@ -6,6 +6,7 @@ class Countdown extends Component {
     super();
     this.state = {
       eventDate: new Date(),
+      currentDate: new Date(),
       years: 0,
       days: 0,
       hours: 0,
@@ -23,13 +24,7 @@ class Countdown extends Component {
     if(dateThen < dateNow){
       alert('Please choose an event in the future.')
     } else {
-      let distance = dateThen - dateNow;
-
-      let years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365))
-      let days = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
-      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      this.timeCalc(dateThen, dateNow);
 
       fetch('/api/eventData', {
         method: 'POST',
@@ -42,16 +37,27 @@ class Countdown extends Component {
       })
       .then(res => console.log(res))
       .catch(error => console.error('Error: ', error))
-
-      this.setState({
-        eventDate: dateThen,
-        years: years,
-        days: days,
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds
-      });
     }
+  }
+
+  timeCalc = (event, current) => {
+    let distance = event - current;
+
+    let years = Math.floor(distance / (1000 * 60 * 60 * 24 * 365))
+    let days = Math.floor((distance % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    this.setState({
+      eventDate: event,
+      currentDate: current,
+      years: years,
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds
+    });
   }
 
   componentDidMount() {
