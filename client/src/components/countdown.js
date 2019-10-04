@@ -75,7 +75,7 @@ class Countdown extends Component {
   render() {
     return (
       <div>
-        <h2>Event Information</h2>
+        <h2>Event Date and Time</h2>
           <form id="event-form" onSubmit={this.handleSubmit}>
             <div>
               <input type="datetime-local" name="eventdate" />
